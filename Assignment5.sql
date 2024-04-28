@@ -1,117 +1,180 @@
-REM   Script: mine_assignmnet5
-REM   assign5
+create table dept(deptno number NOT NULL PRIMARY KEY, deptname varchar(10) CHECK (deptname in ('acc','comp','elect')));
 
-CREATE TABLE dept ( 
-    deptno NUMBER PRIMARY KEY, 
-    dept_name VARCHAR2(20) CHECK (dept_name IN ('Acc', 'Comp', 'Elect')) 
-);
+describe dept
 
-CREATE TABLE emp ( 
-    empno NUMBER PRIMARY KEY, 
-    emp_name VARCHAR2(20) UNIQUE, 
-    job VARCHAR2(20) CHECK (job IN ('Prof', 'AP', 'Lect')), 
-    sal NUMBER NOT NULL, 
-    deptno NUMBER REFERENCES dept(deptno), 
-    mgr_no NUMBER REFERENCES emp(empno) 
-);
 
-CREATE TABLE S ( 
-    sno NUMBER PRIMARY KEY, 
-    sname VARCHAR2(20), 
-    city VARCHAR2(20) 
-);
+create table emp(empno number NOT NULL PRIMARY KEY,empname varchar(10) UNIQUE, job varchar(10) CHECK(job in ('prof','ap','lect')),sal number NOT NULL, deptno number,  mgrno number, FOREIGN KEY(deptno) REFERENCES dept(deptno), FOREIGN KEY(mgrno) REFERENCES emp(empno));
 
-CREATE TABLE S ( 
-    sno NUMBER PRIMARY KEY, 
-    sname VARCHAR2(20), 
-    city VARCHAR2(20) 
-);
+describe emp 
 
-CREATE TABLE P ( 
-    pno NUMBER PRIMARY KEY, 
-    pname VARCHAR2(20), 
-    color VARCHAR2(20) 
-);
 
-CREATE TABLE J ( 
-    jno NUMBER PRIMARY KEY, 
-    jname VARCHAR2(20), 
-    city VARCHAR2(20) 
-);
+create table S(sno number NOT NULL PRIMARY KEY,sname varchar(10),city varchar(10));
 
-CREATE TABLE SPJ ( 
-    sno NUMBER, 
-    pno NUMBER, 
-    jno NUMBER, 
-    qty NUMBER, 
-    PRIMARY KEY (sno, pno, jno), 
-    FOREIGN KEY (sno) REFERENCES S(sno), 
-    FOREIGN KEY (pno) REFERENCES P(pno), 
-    FOREIGN KEY (jno) REFERENCES J(jno) 
-);
+create table P(pno number NOT NULL PRIMARY KEY,pname varchar(10),color varchar(10));
 
-insert into dept values (1,'Acc');
+create table J(jno number NOT NULL PRIMARY KEY,jname varchar(10),city varchar(10));
 
-insert into dept values (2,'Comp');
+create table SPJ(sno number,pno number,jno number,qty number,PRIMARY KEY(sno,pno,jno), FOREIGN KEY(sno) REFERENCES S(sno),FOREIGN KEY(sno) REFERENCES P(pno),FOREIGN KEY(sno) REFERENCES J(jno)) 
+ 
+;
 
-insert into dept values (3,'Elect');
+describe emp 
 
-ALTER TABLE EMP MODIFY EMP_NAME NULL;
 
-ALTER TABLE EMP MODIFY JOB NULL;
+select * from user_constraints where table_name='SPJ' 
+;
 
-ALTER TABLE EMP MODIFY MGR NULL;
+select * from user_constraints where table_name='emp';
 
-ALTER TABLE EMP MODIFY HIREDATE NULL;
+alter table emp drop UNIQUE(empname) 
+;
 
-ALTER TABLE EMP MODIFY SAL NULL;
+select * from user_constraints where table_name='EMP';
 
-ALTER TABLE EMP MODIFY COMM NULL;
+select * from user_constraints where table_name='EMP';
 
-ALTER TABLE EMP MODIFY DEPTNO NULL;
+select * from user_constraints where table_name='EMP';
 
-SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE 
-FROM USER_CONSTRAINTS 
-WHERE TABLE_NAME = 'EMP';
+alter table emp drop CONSTRAINT SYS_C00147890789;
 
-ALTER TABLE EMP DROP CONSTRAINT EMP_EMP_NAME_UK;
+alter table emp drop CONSTRAINT SYS_C00147890786;
 
-ALTER TABLE EMP DROP CONSTRAINT EMP_DEPTNO_FK;
+select * from user_constraints where table_name='EMP';
 
-ALTER TABLE EMP ADD CONSTRAINT EMP_DEPTNO_FK 
-FOREIGN KEY (DEPTNO) REFERENCES DEPT(DEPTNO);
+alter table emp drop CONSTRAINT SYS_C00147890784;
 
-ALTER TABLE DEPT DROP CONSTRAINT DEPT_DNAME_CHK;
+select * from user_constraints where table_name='EMP';
 
-ALTER TABLE EMP ADD COMM NUMBER(7,2) DEFAULT 0;
+alter table emp drop CONSTRAINT SYS_C00147890785;
 
-ALTER TABLE EMP MODIFY COMM NULL;
+select * from user_constraints where table_name='EMP';
 
-CREATE TABLE EMP_COPY AS SELECT * FROM EMP;
+alter table emp add comm number default 0 NOT NULL 
+;
 
-CREATE TABLE NEW_DEPT ( 
-    DEPT_ID NUMBER(2), 
-    DEPT_NAME VARCHAR2(14), 
-    LOCATION VARCHAR2(13) 
-);
+select * from user_constraints where table_name='EMP';
 
-CREATE TABLE NEW_DEPT_EMPTY AS SELECT * FROM DEPT WHERE 1=2;
+insert into dept values(10,'comp');
 
-UPDATE EMP SET EMP_NAME = 'New Name', JOB = 'New Job' WHERE EMPNO = 100;
+insert into emp(empno,empname,job,sal,deptno,mgrno) values(3,'jim','prof',50000,10,3);
 
-DELETE FROM EMP WHERE DEPTNO = (SELECT DEPTNO FROM DEPT WHERE DNAME = 'COMPUTER');
+insert into emp(empno,empname,job,sal,deptno,mgrno) values(1,'joy','ap',20000,10,3);
 
-UPDATE EMP SET DEPTNO = NULL WHERE DEPTNO = 101;
+insert into dept values(5,'elect');
 
-DELETE FROM DEPT WHERE DEPTNO = 101;
+insert into emp(empno,empname,job,sal,deptno,mgrno) values(4,'jack','prof',50000,5,4);
 
-DELETE FROM EMP WHERE DEPTNO = 102;
+insert into emp(empno,empname,job,sal,deptno,mgrno) values(2,'jiya','ap',20000,5,4);
 
-DELETE FROM DEPT WHERE DEPTNO = 102;
+select * from emp 
+;
 
-DELETE FROM EMP WHERE EMPNO = (SELECT MGR FROM EMP WHERE EMPNO = 114);
+select * from user_constraints where table_name='EMP';
 
-UPDATE EMP SET MGR = NULL WHERE MGR = (SELECT EMPNO FROM EMP WHERE EMP_NAME = 'Ravi');
+alter table emp drop CONSTRAINT SYS_C00147897646;
 
-DELETE FROM EMP WHERE EMP_NAME = 'Ravi' AND EMPNO = 112;
+select * from user_constraints where table_name='EMP';
+
+insert into emp(empno,empname,job,sal,deptno,mgrno) values(6,'hiya','ap',20000,5,4);
+
+select * from emp 
+ 
+;
+
+update emp set comm=5 
+ 
+;
+
+select * from emp 
+-- alter table emp drop CONSTRAINT SYS_C00147897646;
+
+insert into emp(empno,empname,job,sal,deptno,mgrno) values(9,'jackie','prof',50000,5,4);
+
+select * from emp 
+-- alter table emp drop CONSTRAINT SYS_C00147897646;
+
+update emp set comm=5 
+ 
+;
+
+alter table emp modify comm number default 4 NOT NULL 
+-- insert into dept values(5,'elect');
+
+select * from emp 
+-- alter table emp drop CONSTRAINT SYS_C00147897646;
+
+insert into emp(empno,empname,job,sal,deptno,mgrno) values(10,'joyie','prof',50000,5,4);
+
+select * from emp 
+-- alter table emp drop CONSTRAINT SYS_C00147897646;
+
+select * from user_constraints where table_name='EMP';
+
+alter table emp drop CONSTRAINT SYS_C00147899062;
+
+insert into emp(empno,empname,job,sal,deptno,mgrno) values(11,'tiya','prof',50000,5,4);
+
+select * from emp 
+-- alter table emp drop CONSTRAINT SYS_C00147899062;
+
+select * from user_constraints where table_name='EMP';
+
+alter table emp modify comm number default  NULL 
+-- insert into dept values(5,'elect');
+
+insert into emp(empno,empname,job,sal,deptno,mgrno) values(18,'tali','prof',50000,10,3);
+
+select * from emp 
+-- alter table emp drop CONSTRAINT SYS_C00147899062;
+
+create table emp2 as select * from emp;
+
+select * from emp2 
+-- alter table emp drop CONSTRAINT SYS_C00147899062;
+
+create table emp3(eno,ename,jb,sl,dno,mno,co) as select * from emp;
+
+select * from emp3 
+-- alter table emp drop CONSTRAINT SYS_C00147899062;
+
+create table emp4(eno,ename,jb,sl,dno,mno,co) as select * from emp where rownum=0;
+
+select * from emp4 
+-- alter table emp drop CONSTRAINT SYS_C00147899062;
+
+drop table emp4 
+;
+
+alter table emp drop CONSTRAINT SYS_C00147890788  
+-- delete from dept where deptno=10 
+;
+
+select * from user_constraints where table_name='EMP';
+
+select * from user_constraints where table_name='EMP';
+
+select * from user_constraints where table_name='EMP';
+
+alter table emp add CONSTRAINT dptfk FOREIGN KEY(deptno) REFERENCES dept(deptno) ON DELETE SET NULL  
+-- delete from dept where deptno=10 
+;
+
+select * from user_constraints where table_name='EMP';
+
+select * from user_constraints where table_name='EMP';
+
+delete from dept where deptno=10 
+;
+
+select * from emp 
+;
+
+alter table emp drop CONSTRAINT dptfk;
+
+alter table emp add CONSTRAINT dptfk FOREIGN KEY(deptno) REFERENCES dept(deptno) ON DELETE CASCADE ;
+
+delete from dept where deptno=5;
+
+select * from emp 
+;
 
